@@ -5,4 +5,5 @@ package app.net.auth;
  *
  * @author Dan Ottosson
  */
-public record Credential(String agent, String username, String password, String clientID) {}
+public record Credential(String agent, String username, String password,
+                         String clientID, String clientSecret) {}

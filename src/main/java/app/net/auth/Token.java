@@ -5,4 +5,5 @@ package app.net.auth;
  *
  * @author Dan Ottosson
  */
-public record Token(String token, String type, int expire, String scope) {}
+public record Token(String token, String type, int expire, String scope) {
+}

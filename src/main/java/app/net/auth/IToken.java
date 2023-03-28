@@ -7,5 +7,5 @@ package app.net.auth;
  */
 @FunctionalInterface
 public interface IToken {
-    void requestAccessToken();
+    Token requestAccessToken();
 }
