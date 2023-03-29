@@ -7,7 +7,10 @@ package app.net.auth;
  */
 public record Token(String access_token, String token_type, long expires_in,
                     String scope) {
-
+    /**
+     * String representation of a Token object.
+     * @return Token as string
+     */
     public String toString() {
         return String.format(
                 "Token: %s\nType: %s\nExpire: %d\nScope: %s\n",

@@ -6,9 +6,6 @@ import app.net.auth.IToken;
 import app.net.auth.Token;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,12 +16,12 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
  * <h1>RedditConnector</h1>
+ * Connector class to fetch and store access token
+ *
  * @author Dan Ottosson
  */
 public class RedditConnector extends AbstractConnector {
@@ -60,11 +57,18 @@ public class RedditConnector extends AbstractConnector {
         this.credential =
                 new Credential(agent, username, password, clientID, clientSecret);
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void connect() {
         this.setAccessToken();
     }
 
+    /**
+     * Fetch and set the access token.
+     */
     private void setAccessToken() {
         IToken iToken = () -> {
             HttpRequest request;
@@ -90,7 +94,6 @@ public class RedditConnector extends AbstractConnector {
             }
 
             ObjectMapper mapper = new ObjectMapper();
-            Gson gson = new GsonBuilder().create();
 
             try {
                 response = HttpClient.newBuilder()
@@ -112,8 +115,7 @@ public class RedditConnector extends AbstractConnector {
             if (response != null) {
                 if (response.statusCode() == 200) {
                     try {
-                        Token t = mapper.readValue(response.body(), Token.class);
-                        return t;
+                        return mapper.readValue(response.body(), Token.class);
 
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
