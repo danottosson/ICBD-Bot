@@ -77,7 +77,10 @@ public class RedditConnector extends AbstractConnector {
             try {
                 request = HttpRequest.newBuilder()
                         .uri(new URI(ACCESS_TOKEN_URI))
-                        .headers("content-type", "application/x-www-form-urlencoded", "User-Agent", credential.agent())
+                        .headers("content-type",
+                                "application/x-www-form-urlencoded",
+                                "User-Agent",
+                                credential.agent())
                         .POST(HttpRequest.BodyPublishers.ofString(
                                 String.format(
                                         "grant_type=password&username=%s&password=%s",
@@ -128,5 +131,9 @@ public class RedditConnector extends AbstractConnector {
         };
 
         this.token = iToken.requestAccessToken();
+    }
+
+    public Token getToken() {
+        return token;
     }
 }
