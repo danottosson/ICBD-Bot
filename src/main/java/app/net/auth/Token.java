@@ -5,5 +5,16 @@ package app.net.auth;
  *
  * @author Dan Ottosson
  */
-public record Token(String token, String type, int expire, String scope) {
+public record Token(String access_token, String token_type, long expires_in,
+                    String scope) {
+
+    public String toString() {
+        return String.format(
+                "Token: %s\nType: %s\nExpire: %d\nScope: %s\n",
+                access_token,
+                token_type,
+                expires_in,
+                scope
+        );
+    }
 }
