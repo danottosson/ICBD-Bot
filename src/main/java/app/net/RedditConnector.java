@@ -132,8 +132,4 @@ public class RedditConnector extends AbstractConnector {
 
         this.token = iToken.requestAccessToken();
     }
-
-    public Token getToken() {
-        return token;
-    }
 }
