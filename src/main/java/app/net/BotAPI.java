@@ -2,6 +2,10 @@ package app.net;
 
 import app.net.auth.AbstractConnector;
 import app.net.auth.Credential;
+import app.net.request.AbstractRequest;
+import app.net.request.RedditRequest;
+
+import java.util.List;
 
 /**
  * <h1>RedditRequest</h1>
@@ -28,13 +32,7 @@ public class BotAPI implements Runnable {
     }
 
     public static void main(String[] args) {
-        Thread t = new Thread(new BotAPI(
-                "ICBD-Bot/0.1 by Turbulent_Professor8",
-                "Turbulent_Professor8",
-                "bJpwJwnP82_xLh6",
-                "QivFSZerdfZuSW8Mj17Tww",
-                "emtHSVlrSYQjJf0BljKRQodWoRNd0w"){});
-        t.start();
+        
     }
 
     /**
@@ -52,7 +50,9 @@ public class BotAPI implements Runnable {
     public void run() {
         // Fetch access token
         connect();
-
+        AbstractRequest request = new RedditRequest();
+        request.getRequest(connector.getCredential(),connector.getToken(), List.of(
+                "kpop")); // , "politics"
         System.out.println("End of run");
     }
 }

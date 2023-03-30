@@ -9,7 +9,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
+import java.util.*;
 
 /**
  * <h1>RedditRequest</h1>
@@ -27,8 +27,10 @@ public class RedditRequest extends AbstractRequest {
                 request = HttpRequest.newBuilder()
                         .uri(new URI(REQUEST_URI + s))
                         .headers("Authorization",
-                                token.token_type() + " " + token.access_token(), "User" +
-                                        "-Agent", credential.agent())
+                                token.token_type() + " " + token.access_token(),
+                                "User-Agent",
+                                credential.agent()
+                        )
                         .GET()
                         .build();
 
@@ -45,6 +47,27 @@ public class RedditRequest extends AbstractRequest {
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
+
+            Map<String, List<String>> map = response.headers().map();
+
+            System.out.println(
+                    "Limit remaining: " + map.get(LIMIT_REMAINING) + "\n" +
+                    "Limit reset: " + map.get(LIMIT_RESET) + "\n" +
+                    "Limit used: " + map.get(LIMIT_USED)
+            );
+
+            System.out.println(response.body());
+
+            /*
+            List<Optional<String>> optionals = new ArrayList<>();
+            optionals.add(response.headers().firstValue(LIMIT_REMAINING));
+            optionals.add(response.headers().firstValue(LIMIT_RESET));
+            optionals.add(response.headers().firstValue(LIMIT_USED));
+
+            for (Optional<String> o : optionals) {
+                o.ifPresent(System.out::println);
+            }
+            */
         }
 
     }

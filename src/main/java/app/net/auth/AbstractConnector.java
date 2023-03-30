@@ -16,6 +16,9 @@ public abstract class AbstractConnector {
      */
     public void connect() {}
 
+    public Credential getCredential(){ return credential; }
+    public Token getToken() { return token; }
+
     /**
      * Method to get the token as a string
      * @return token as string
