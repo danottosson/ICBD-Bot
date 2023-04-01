@@ -32,7 +32,8 @@ public class BotAPI implements Runnable {
     }
 
     public static void main(String[] args) {
-        
+        Thread t = new Thread(new BotAPI(){});
+        t.start();
     }
 
     /**
