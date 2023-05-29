@@ -22,7 +22,6 @@ import java.util.*;
 public class RedditRequest extends AbstractRequest {
     private static final String REQUEST_URI = "https://oauth.reddit.com/r/";
     private final Gson gson = new Gson();
-
     private static String getSubredditRequestUri(String subreddit) {
         return String.format(REQUEST_URI+"%s", subreddit);
     }
@@ -45,40 +44,39 @@ public class RedditRequest extends AbstractRequest {
         }
     }
 
+    public HttpRequest createHttpGetRequest(String subreddit, Token token, Credential credential) {
+        HttpRequest request = null;
+        try {
+            request = HttpRequest.newBuilder()
+                    .uri(getUriFromString(
+                            getSubredditRequestUri(
+                                    subreddit
+                            )
+                    ))
+                    .headers("Authorization",
+                            token.token_type() + " " + token.access_token(),
+                            "User-Agent",
+                            credential.agent()
+                    )
+                    .GET()
+                    .build();
+
+        } catch (URISyntaxException e) {
+            System.err.println("URI do not match");
+            System.err.println(e.getMessage());
+        }
+        return request;
+    }
+
     @Override
     public void getRequest(Credential credential, Token token, List<String> requestList) {
         HttpRequest request = null;
         HttpResponse<String> response;
 
         for (String subreddit : requestList) {
-            try {
-                request = HttpRequest.newBuilder()
-                        .uri(getUriFromString(
-                                getSubredditRequestUri(
-                                        subreddit
-                                )
-                        ))
-                        .headers("Authorization",
-                                token.token_type() + " " + token.access_token(),
-                                "User-Agent",
-                                credential.agent()
-                        )
-                        .GET()
-                        .build();
+            request = createHttpGetRequest(subreddit, token, credential);
 
-            } catch (URISyntaxException e) {
-                System.err.println("URI do not match");
-                System.err.println(e.getMessage());
-            }
-
-            try {
-                response = HttpClient.newBuilder()
-                        .build()
-                        .send(request, HttpResponse.BodyHandlers.ofString());
-
-            } catch (IOException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            response = getHttpResponseFromGetRequest(request);
 
             System.out.println(redditRequestLimitHeadersToString(response));
 
@@ -123,10 +121,6 @@ public class RedditRequest extends AbstractRequest {
                 throw new RuntimeException(e);
             }
 
-            System.out.println(redditRequestLimitHeadersToString(response1));
-
-            System.out.println(response1.body());
-
             Listing[] response1Listing = gson.fromJson(response1.body(), Listing[].class);
 
             assert response1Listing != null;
@@ -137,15 +131,13 @@ public class RedditRequest extends AbstractRequest {
                     .filter(child -> child.kind().equals("t1"))
                     .toList();
 
-            children.forEach(child -> System.out.println("\n" + child.data().name() + "\n" + child.data().body()));
+            children.forEach(child ->
+                    System.out.println("\n" + child.data().name() + "\n" + child.data().body()));
         }
-
     }
 
     @Override
-    public void postRequest() {
-
-    }
+    public void postRequest() {}
 
     public String redditRequestLimitHeadersToString(HttpResponse<String> response) {
         Map<String,List<String>> headersMap = response.headers().map();

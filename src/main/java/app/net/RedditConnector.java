@@ -25,7 +25,7 @@ import java.util.Properties;
  * @author Dan Ottosson
  */
 public class RedditConnector extends AbstractConnector {
-    private final static String PROPERTIES = "src/main/resources/application.properties";
+    public final static String PROPERTIES = "src/main/resources/application.properties";
     private final static String ACCESS_TOKEN_URI =
             "https://www.reddit.com/api/v1/access_token";
 

@@ -31,11 +31,6 @@ public class BotAPI implements Runnable {
         connector.connect();
     }
 
-    public static void main(String[] args) {
-        Thread t = new Thread(new BotAPI(){});
-        t.start();
-    }
-
     /**
      * When an object implementing interface {@code Runnable} is used
      * to create a thread, starting the thread causes the object's
@@ -53,7 +48,6 @@ public class BotAPI implements Runnable {
         connect();
         AbstractRequest request = new RedditRequest();
         request.getRequest(connector.getCredential(),connector.getToken(), List.of(
-                "kpop")); // , "politics"
-        System.out.println("End of run");
+                "YOUR CHOICE"));
     }
 }
